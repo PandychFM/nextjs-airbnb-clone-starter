@@ -1,0 +1,46 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Listing {
+  createdAt        DateTime   @default(now())
+  description      String
+  id               String     @id @default(cuid())
+  listingCreatedBy Listing    @relation(name: "listingCreatedBy", fields: [listings], references: [id])
+  listings         String
+  listings         Listing[]  @relation(name: "listingCreatedBy")
+  locationData     Json
+  locationType     String
+  mapData          Json
+  photos           Json
+  placeAmeneties   Json?
+  placeSpace       Json
+  placeType        String
+  price            Float
+  title            String
+  trips            Trip[]
+  updatedAt        DateTime   @updatedAt
+  wishlists        Wishlist[]
+}
+
+model Wishlist {
+  createdAt DateTime @default(now())
+  id        String   @id @default(cuid())
+  listing   Listing? @relation(fields: [listingId], references: [id])
+  listingId String?
+  updatedAt DateTime @updatedAt
+}
+
+model Trip {
+  createdAt DateTime @default(now())
+  id        String   @id @default(cuid())
+  listing   Listing? @relation(fields: [listingId], references: [id])
+  listingId String?
+  tripInfo  Json
+  updatedAt DateTime @updatedAt
+}
